@@ -46,7 +46,7 @@ class PuppetJenkinsPlugins:
                     continue
                 if dep['optional'] == False:
                     deps[dep['name']] = dep['version']
-                for dep, values in deps.items():
+                for dep, values in list(deps.items()):
                     deps.update(self.parse_plugin_dependencies(dep, values))
 
 
@@ -62,7 +62,7 @@ class PuppetJenkinsPlugins:
             for dep, keys in dependencies.items():
                 output_data[dep] = keys
 
-        print yaml.safe_dump(output_data)
+        print(yaml.safe_dump(output_data))
 
     def fetch_update_center_json(self):
         if os.path.isfile(self.update_center_json):
