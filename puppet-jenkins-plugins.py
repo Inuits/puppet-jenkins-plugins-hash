@@ -21,6 +21,7 @@ class PuppetJenkinsPlugins:
         parser.add_argument('--update-center-json', help='Update center JSON url',
                             default='https://updates.jenkins-ci.org/current/update-center.json')
         parser.add_argument('--debug', '-d', help='Print debug information', action='store_true')
+        parser.add_argument('--label', '-l', help='Label containing the hash to work on. If not provided, the complete yaml file is used.', default=None)
         args = parser.parse_args()
         if args.debug:
             logging.basicConfig(level=logging.DEBUG)
@@ -29,6 +30,8 @@ class PuppetJenkinsPlugins:
         logging.debug('Yaml file is %s' % self.input_yaml)
         self.update_center_json = args.update_center_json
         logging.debug('update_center_json is %s' % self.update_center_json)
+        self.label = args.label
+        logging.debug('using label %s' % self.label)
 
     def run(self):
         self.parse_options()
@@ -57,10 +60,17 @@ class PuppetJenkinsPlugins:
         output_data = {}
         with open(self.input_yaml) as input_yaml:
             input_data = yaml.load(input_yaml)
+
+        if self.label is not None:
+            input_data = input_data[self.label]
+
         for plugin in input_data:
             dependencies = self.parse_plugin_dependencies(plugin, input_data)
             for dep, keys in dependencies.items():
                 output_data[dep] = keys
+
+        if self.label is not None:
+            output_data = { self.label: output_data }
 
         print(yaml.safe_dump(output_data))
 
