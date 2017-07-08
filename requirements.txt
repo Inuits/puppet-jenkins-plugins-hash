@@ -1,2 +1,11 @@
 PyYAML==3.12
 requests==2.11.1
+invoke==0.15.0
+
+## Code style
+flake8
+flake8-docstrings
+flake8-tidy-imports
+flake8-commas
+flake8-pep3101
+flake8-builtins
