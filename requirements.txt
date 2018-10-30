@@ -1,5 +1,5 @@
 PyYAML==3.12
-requests==2.11.1
+requests==2.20.0
 invoke==0.15.0
 
 ## Code style
